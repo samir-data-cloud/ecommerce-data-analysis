@@ -66,11 +66,10 @@ New variables were created:
 
 ##  Key Insights
 
-- Revenue shows clear seasonality trends
-- Late deliveries negatively impact customer satisfaction
-- A small number of product categories generate most of the revenue
-- Delivery performance is a key driver of reviews
-
+- Revenue shows clear monthly seasonality patterns
+- Late deliveries significantly reduce customer satisfaction scores
+- A small number of product categories generate most of the revenue (Pareto effect)
+- Delivery performance is a key driver of customer reviews
 ---
 
 ##  Tools Used
