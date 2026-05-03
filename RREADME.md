@@ -1,5 +1,11 @@
 # E-commerce Data Analysis Project (Olist)
 
+
+## 📊 Dashboard Preview
+
+![Revenue](revenue.png)
+
+
 ##  Objective
 This project analyzes an e-commerce dataset to extract insights on sales performance, customer behavior, and delivery efficiency.
 
@@ -43,9 +49,9 @@ New variables were created:
 ##  Analysis Performed
 
 - Revenue evolution over time
-- Customer satisfaction analysis
+- Customer satisfaction analysis ![Satisfaction](satifaction.png)
 - Delivery performance (late deliveries)
-- Top-performing product categories
+- Top-performing product categories ![TOP](top_product.png)
 
 ---
 
