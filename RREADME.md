@@ -51,7 +51,7 @@ New variables were created:
 - Revenue evolution over time
 - Customer satisfaction analysis ![Satisfaction](satifaction.png)
 - Delivery performance (late deliveries)
-- Top-performing product categories ![TOP](top_product.png)
+- Top-performing product categories 
 
 ---
 
