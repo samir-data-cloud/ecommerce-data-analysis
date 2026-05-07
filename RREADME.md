@@ -76,10 +76,10 @@ New variables were created:
 - Python (Pandas, Matplotlib)
 - Jupyter Notebook
 - Data visualization libraries
+- Tabelau(Dashboard)
 
 ## 📌 Project Structure
-/notebook.ipynb/data (optional)
-/images
+
 README.md
 
 ## Outcome
