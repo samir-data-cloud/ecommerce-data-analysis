@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-Commerce Olist — Dashboard Analytique</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f5f4f0;
+      --dark: #1a1a18;
+      --green: #1D9E75;
+      --red: #E24B4A;
+      --card: #ffffff;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+    }
+
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--dark); }
+
+    /* ── Header ── */
+    header {
+      background: var(--dark);
+      color: #fff;
+      padding: 2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    header h1 { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em; }
+    header h1 span { color: var(--green); }
+    header p { font-size: .85rem; color: #9ca3af; margin-top: .3rem; }
+    .header-meta { text-align: right; font-size: .8rem; color: #9ca3af; }
+    .header-meta strong { color: var(--green); display: block; font-size: .9rem; }
+
+    /* ── Layout ── */
+    main { max-width: 1400px; margin: 0 auto; padding: 2.5rem 2rem; }
+
+    /* ── KPIs ── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+    .kpi {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .kpi::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--green);
+    }
+    .kpi.red::before { background: var(--red); }
+    .kpi-label { font-size: .78rem; font-weight: 600; text-transform: uppercase;
+                 letter-spacing: .06em; color: var(--muted); margin-bottom: .5rem; }
+    .kpi-value { font-size: 2rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
+    .kpi-sub { font-size: .8rem; color: var(--muted); margin-top: .4rem; }
+    .kpi-badge {
+      display: inline-block; font-size: .72rem; font-weight: 600;
+      padding: .15rem .5rem; border-radius: 999px; margin-top: .5rem;
+    }
+    .badge-green { background: #d1fae5; color: #065f46; }
+    .badge-red   { background: #fee2e2; color: #991b1b; }
+
+    /* ── Charts grid ── */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .charts-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .chart-card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+    }
+    .chart-card.full { grid-column: 1 / -1; }
+    .chart-title {
+      font-size: .85rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .06em; color: var(--dark); margin-bottom: .25rem;
+    }
+    .chart-sub { font-size: .78rem; color: var(--muted); margin-bottom: 1.25rem; }
+    .chart-wrap { position: relative; }
+
+    /* ── Insights ── */
+    .insights-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin-top: 2rem;
+    }
+    .insight {
+      background: var(--dark);
+      color: #fff;
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .insight-icon { font-size: 1.5rem; margin-bottom: .75rem; }
+    .insight-title { font-size: .85rem; font-weight: 700; color: var(--green);
+                     text-transform: uppercase; letter-spacing: .05em; margin-bottom: .5rem; }
+    .insight-text { font-size: .88rem; line-height: 1.6; color: #d1d5db; }
+    .insight-number { font-size: 1.8rem; font-weight: 700; color: #fff; margin: .5rem 0; }
+
+    footer {
+      text-align: center; padding: 2rem; font-size: .8rem;
+      color: var(--muted); border-top: 1px solid var(--border); margin-top: 3rem;
+    }
+    footer a { color: var(--green); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>E-Commerce <span>Olist</span> — Dashboard Analytique</h1>
+    <p>117 329 commandes · 73 catégories · 26 états brésiliens · 2017–2018</p>
+  </div>
+  <div class="header-meta">
+    <strong>Bouziane Samir</strong>
+    Data Analyst &amp; BI Developer<br>
+    Python · SQL · Chart.js
+  </div>
+</header>
+
+<main>
+
+  <!-- KPIs -->
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="kpi-label">Chiffre d'affaires</div>
+      <div class="kpi-value">R$14.1M</div>
+      <div class="kpi-sub">114 859 commandes livrées</div>
+      <span class="kpi-badge badge-green">+52% Nov 2017</span>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Panier moyen</div>
+      <div class="kpi-value">R$120</div>
+      <div class="kpi-sub">Frais de port : R$19.99 moy.</div>
+      <span class="kpi-badge badge-green">16.6% du total</span>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Score satisfaction</div>
+      <div class="kpi-value">4.03 <small style="font-size:1rem">/5</small></div>
+      <div class="kpi-sub">73 catégories de produits</div>
+      <span class="kpi-badge badge-green">Positif</span>
+    </div>
+    <div class="kpi red">
+      <div class="kpi-label">Livraisons en retard</div>
+      <div class="kpi-value">63.5%</div>
+      <div class="kpi-sub">États les + touchés : AC, AP, RO</div>
+      <span class="kpi-badge badge-red">Critique</span>
+    </div>
+  </div>
+
+  <!-- Row 1: Revenue + Payment -->
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-title">Revenus mensuels</div>
+      <div class="chart-sub">CA mensuel — Olist 2017–2018 (R$)</div>
+      <div class="chart-wrap"><canvas id="revenueChart" height="90"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Modes de paiement</div>
+      <div class="chart-sub">Distribution des transactions</div>
+      <div class="chart-wrap"><canvas id="paymentChart" height="180"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Row 2: Categories + Late rate + Scores -->
+  <div class="charts-row">
+    <div class="chart-card">
+      <div class="chart-title">Top catégories — CA</div>
+      <div class="chart-sub">Chiffre d'affaires par catégorie (R$)</div>
+      <div class="chart-wrap"><canvas id="catChart" height="200"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Retards par état</div>
+      <div class="chart-sub">Taux de livraison en retard (%)</div>
+      <div class="chart-wrap"><canvas id="lateChart" height="200"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Distribution des avis</div>
+      <div class="chart-sub">Scores clients 1 → 5</div>
+      <div class="chart-wrap"><canvas id="scoreChart" height="200"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Row 3: Delivery impact -->
+  <div class="chart-card" style="margin-bottom:1.5rem">
+    <div class="chart-title">Impact délai livraison sur satisfaction</div>
+    <div class="chart-sub">Score moyen selon la bande de délai — corrélation négative forte</div>
+    <div class="chart-wrap"><canvas id="deliveryChart" height="60"></canvas></div>
+  </div>
+
+  <!-- Insights -->
+  <div class="insights-grid">
+    <div class="insight">
+      <div class="insight-icon">📦</div>
+      <div class="insight-title">Black Friday Effect</div>
+      <div class="insight-number">+52%</div>
+      <div class="insight-text">Novembre 2017 génère R$1.04M vs R$689K en octobre. Préparer les stocks 6 semaines à l'avance pour absorber le pic.</div>
+    </div>
+    <div class="insight">
+      <div class="insight-icon">🚚</div>
+      <div class="insight-title">Crise logistique nord</div>
+      <div class="insight-number">97.9%</div>
+      <div class="insight-text">L'état d'Acre (AC) affiche 98% de retards. Les états nordiques nécessitent un partenaire logistique dédié ou une politique de surcoût transparente.</div>
+    </div>
+    <div class="insight">
+      <div class="insight-icon">💳</div>
+      <div class="insight-title">Carte de crédit dominante</div>
+      <div class="insight-number">73.7%</div>
+      <div class="insight-text">73% des transactions en carte de crédit. Opportunité : programme de cashback ou fidélité pour augmenter la fréquence d'achat.</div>
+    </div>
+    <div class="insight">
+      <div class="insight-icon">⭐</div>
+      <div class="insight-title">Retards → Insatisfaction</div>
+      <div class="insight-number">−0.8 pt</div>
+      <div class="insight-text">Les livraisons Express (< 7j) obtiennent 4.2/5 vs 3.4/5 pour les livraisons très longues. Réduire les retards = améliorer le NPS.</div>
+    </div>
+    <div class="insight">
+      <div class="insight-icon">🛍️</div>
+      <div class="insight-title">Frais de port = frein</div>
+      <div class="insight-number">16.6%</div>
+      <div class="insight-text">Les frais de port représentent 16.6% du total payé. Pour les paniers < R$50, ce ratio monte à 35%. Seuil de livraison gratuite recommandé : R$100.</div>
+    </div>
+    <div class="insight">
+      <div class="insight-icon">💰</div>
+      <div class="insight-title">Potentiel identifié</div>
+      <div class="insight-number">R$800K–1.5M</div>
+      <div class="insight-text">Réduire le taux de retard de 63% à 30% améliorerait le score client de +0.4 pt et pourrait générer R$800K–1.5M de CA supplémentaire par an.</div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  Dashboard by <a href="https://linkedin.com/in/samir-bouziane-117172409">Bouziane Samir</a> ·
+  Dataset : Olist Brazilian E-Commerce (Kaggle) ·
+  Stack : Python · SQL · Chart.js
+</footer>
+
+<script>
+const GREEN  = '#1D9E75';
+const RED    = '#E24B4A';
+const DARK   = '#1a1a18';
+const MUTED  = '#9ca3af';
+
+Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
+Chart.defaults.color = '#6b7280';
+
+// ── Revenue mensuel ──────────────────────────────────────────────────────────
+new Chart(document.getElementById('revenueChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Sep-17','Oct-17','Nov-17','Déc-17','Jan-18','Fév-18','Mar-18','Avr-18','Mai-18','Jun-18','Jul-18','Aoû-18'],
+    datasets: [{
+      label: 'CA (R$)',
+      data: [412000, 689625, 1045441, 761677, 982295, 882311, 1018393, 1024459, 1025932, 907669, 914671, 878224],
+      backgroundColor: (ctx) => ctx.dataIndex === 2 ? RED : GREEN + 'cc',
+      borderRadius: 6,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: (ctx) => ` R${ctx.parsed.y.toLocaleString('fr-FR')}`
+        }
+      }
+    },
+    scales: {
+      x: { grid: { display: false } },
+      y: {
+        grid: { color: '#f3f4f6' },
+        ticks: {
+          callback: (v) => 'R$' + (v/1000).toFixed(0) + 'K'
+        }
+      }
+    }
+  }
+});
+
+// ── Paiement ─────────────────────────────────────────────────────────────────
+new Chart(document.getElementById('paymentChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Carte de crédit', 'Boleto', 'Voucher', 'Carte de débit'],
+    datasets: [{
+      data: [73.7, 19.5, 5.4, 1.4],
+      backgroundColor: [GREEN, '#374151', '#6b7280', '#d1d5db'],
+      borderWidth: 0,
+      hoverOffset: 8,
+    }]
+  },
+  options: {
+    responsive: true,
+    cutout: '68%',
+    plugins: {
+      legend: { position: 'bottom', labels: { padding: 16, boxWidth: 12 } },
+      tooltip: {
+        callbacks: { label: (ctx) => ` ${ctx.label}: ${ctx.parsed}%` }
+      }
+    }
+  }
+});
+
+// ── Top catégories ───────────────────────────────────────────────────────────
+new Chart(document.getElementById('catChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Beauté & Santé','Montres','Literie','Sport','Informatique','Déco','Dom.','Cool Stuff'],
+    datasets: [{
+      label: 'CA (R$)',
+      data: [1290884, 1245783, 1095770, 1022489, 944993, 765337, 664227, 655820],
+      backgroundColor: GREEN + 'cc',
+      borderRadius: 5,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { color: '#f3f4f6' }, ticks: { callback: v => 'R$'+(v/1000).toFixed(0)+'K' } },
+      y: { grid: { display: false }, ticks: { font: { size: 11 } } }
+    }
+  }
+});
+
+// ── Retards par état ──────────────────────────────────────────────────────────
+new Chart(document.getElementById('lateChart'), {
+  type: 'bar',
+  data: {
+    labels: ['AC','AP','RO','PA','AM','SE','TO','MA'],
+    datasets: [{
+      label: 'Retard (%)',
+      data: [97.9, 97.6, 97.5, 95.2, 94.7, 94.7, 94.4, 93.7],
+      backgroundColor: RED + 'cc',
+      borderRadius: 5,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false } },
+      y: {
+        min: 80,
+        grid: { color: '#f3f4f6' },
+        ticks: { callback: v => v + '%' }
+      }
+    }
+  }
+});
+
+// ── Distribution scores ───────────────────────────────────────────────────────
+new Chart(document.getElementById('scoreChart'), {
+  type: 'bar',
+  data: {
+    labels: ['★1','★2','★3','★4','★5'],
+    datasets: [{
+      label: 'Commandes',
+      data: [11248, 3296, 8014, 19238, 73063],
+      backgroundColor: ['#ef4444','#f97316','#facc15', GREEN+'99', GREEN],
+      borderRadius: 5,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false } },
+      y: { grid: { color: '#f3f4f6' } }
+    }
+  }
+});
+
+// ── Delivery impact ───────────────────────────────────────────────────────────
+new Chart(document.getElementById('deliveryChart'), {
+  type: 'line',
+  data: {
+    labels: ['Express (< 7j)', 'Standard (7–14j)', 'Long (14–30j)', 'Très long (> 30j)'],
+    datasets: [
+      {
+        label: 'Score moyen',
+        data: [4.22, 4.05, 3.85, 3.42],
+        borderColor: GREEN,
+        backgroundColor: GREEN + '20',
+        fill: true,
+        tension: .4,
+        pointRadius: 6,
+        pointBackgroundColor: GREEN,
+        yAxisID: 'y',
+      },
+      {
+        label: '% commandes',
+        data: [18, 30, 38, 14],
+        borderColor: RED,
+        backgroundColor: 'transparent',
+        borderDash: [5,5],
+        tension: .4,
+        pointRadius: 5,
+        pointBackgroundColor: RED,
+        yAxisID: 'y1',
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    interaction: { mode: 'index' },
+    plugins: { legend: { position: 'top' } },
+    scales: {
+      y:  { min: 3, max: 5, grid: { color: '#f3f4f6' }, ticks: { callback: v => v+'/5' } },
+      y1: { position: 'right', grid: { display: false }, ticks: { callback: v => v+'%' } }
+    }
+  }
+});
+</script>
+</body>
+</html>
